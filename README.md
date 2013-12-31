@@ -1,4 +1,4 @@
 sonar-review-creator
 ====================
 
-Using SonarQube API, create and assign reviews for the violations created after the specified date.
+Php project using SonarQube API to create and assign reviews for the Sonar violations created after the specified date.
