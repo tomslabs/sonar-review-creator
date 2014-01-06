@@ -22,6 +22,28 @@ step by step
 
 3. Run sonar-review-creator : `php runSonarReviewCreator.php`
 
+So far, it only works with **Git** projects.
+
+Prerequisites
+=============
+
+* Sonar configured with LDAP and SCM Activity plugins
+
+step by step
+============
+
+1. Rename `app/config/ldap-aliases-template.json` to `app/config/ldap-aliases.json`
+
+    [{"smartin":["S\u00e9bastien M","smartin@mycompany.com"]},{"bdupont":["Bernard","bdupont@mycompany.com"]}]
+
+    smartin and bdupont are Ldap user identifiers
+
+    user identifiers are followed by the list of SCM aliases used by the user (cf .gitconfig file)
+
+2. Configure `sonar-review-creator.ini`
+
+3. Run sonar-review-creator : `php runSonarReviewCreator.php`
+
 phpUnit tests
 =============
 
