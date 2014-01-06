@@ -43,7 +43,10 @@ class SonarReviewCreator {
   }
   
   public function violationWasCreatedAfterTheGivenDate($createdAt) {
-    return strtotime($createdAt) >= strtotime($this->createdAfter);
+    date_default_timezone_set('UTC');
+    $violationCreatedDate = new DateTime($createdAt);
+    $createdAfterLimitDate = new DateTime($this->createdAfter);
+    return $violationCreatedDate >= $createdAfterLimitDate;
   }
   
   private function newViolation($violation) {
