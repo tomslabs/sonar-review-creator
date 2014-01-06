@@ -1,0 +1,92 @@
+[
+   {
+      "id":22962802,
+      "message":"The method getMarkupWhenLayer has 10 parameters. Consider to reduce parameter number under 10.",
+      "line":249,
+      "priority":"BLOCKER",
+      "createdAt":"2013-10-24T11:54:06+0200",
+      "rule":{
+         "key":"phppmd_rules:Code Size Rules/ExcessiveParameterList",
+         "name":"Method has too many parameters"
+      },
+      "resource":{
+         "key":"com.tomslabs.tools:sonar-review-creator:lib/helper/TomsLabsPager.class.php",
+         "name":"TomsLabsPager.class.php",
+         "scope":"FIL",
+         "qualifier":"FIL",
+         "language":"php"
+      }
+   },
+   {
+      "id":22962731,
+      "message":"The method __toString() has a Cyclomatic Complexity of 12. The configured cyclomatic complexity threshold is 10.",
+      "line":35,
+      "priority":"CRITICAL",
+      "createdAt":"2012-09-18T08:42:05+0200",
+      "rule":{
+         "key":"phppmd_rules:Code Size Rules/CyclomaticComplexity",
+         "name":"Class cyclomatic complexity exceed maximum"
+      },
+      "resource":{
+         "key":"com.tomslabs.tools:sonar-review-creator:lib/ws/wsQuery.class.php",
+         "name":"wsQuery.class.php",
+         "scope":"FIL",
+         "qualifier":"FIL",
+         "language":"php"
+      }
+   },
+   {
+      "id":22962732,
+      "message":"The method __toString() has an NPath complexity of 1296. The configured NPath complexity threshold is 200.",
+      "line":35,
+      "priority":"CRITICAL",
+      "createdAt":"2012-09-18T08:42:05+0200",
+      "rule":{
+         "key":"phppmd_rules:Code Size Rules/NPathComplexity",
+         "name":"Class NPath Complexity exceeds maximum"
+      },
+      "resource":{
+         "key":"com.tomslabs.tools:sonar-review-creator:lib/ws/wsQuery.class.php",
+         "name":"wsQuery.class.php",
+         "scope":"FIL",
+         "qualifier":"FIL",
+         "language":"php"
+      }
+   },
+   {
+      "id":22962753,
+      "message":"The method userHasDeletePermission() has an NPath complexity of 200. The configured NPath complexity threshold is 200.",
+      "line":113,
+      "priority":"CRITICAL",
+      "createdAt":"2013-03-15T16:41:56+0100",
+      "rule":{
+         "key":"phppmd_rules:Code Size Rules/NPathComplexity",
+         "name":"Class NPath Complexity exceeds maximum"
+      },
+      "resource":{
+         "key":"com.tomslabs.tools:sonar-review-creator:lib/_usr/permissions/tomsLabsResponsePermissions.php",
+         "name":"tomsLabsResponsePermissions.php",
+         "scope":"FIL",
+         "qualifier":"FIL",
+         "language":"php"
+      }
+   },
+   {
+      "id":22962768,
+      "message":"The method getLinks() has an NPath complexity of 200. The configured NPath complexity threshold is 200.",
+      "line":32,
+      "priority":"CRITICAL",
+      "createdAt":"2013-08-28T16:55:48+0200",
+      "rule":{
+         "key":"phppmd_rules:Code Size Rules/NPathComplexity",
+         "name":"Class NPath Complexity exceeds maximum"
+      },
+      "resource":{
+         "key":"com.tomslabs.tools:sonar-review-creator:lib/addon/seo/rLinksWS.class.php",
+         "name":"rLinksWS.class.php",
+         "scope":"FIL",
+         "qualifier":"FIL",
+         "language":"php"
+      }
+   }
+]

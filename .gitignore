@@ -1,0 +1,5 @@
+/nbproject/private/
+/composer.phar
+composer.lock
+lib/vendor/composer
+tools/composer/bin/

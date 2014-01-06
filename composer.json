@@ -1,0 +1,10 @@
+{
+    "config": {
+        "vendor-dir": "lib/vendor/composer",
+        "bin-dir": "tools/composer/bin"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*",
+        "kodova/hamcrest-php": "dev-master"
+    }
+}
