@@ -9,6 +9,7 @@ class SonarReviewCreator {
   private $sourceDirectory;
   private $priorities;
   private $nbDaysBackward;
+  private $codeLanguage;
   private $depth = -1;
   
   private $sonarQubeClient;
@@ -33,7 +34,8 @@ class SonarReviewCreator {
     $this->project = $ini_array['project']['name'];
     $this->priorities = $ini_array['project']['priorities'];
     $this->nbDaysBackward = $ini_array['project']['nbDaysBackward'];
-    $this->sourceDirectory = $ini_array['project']['sourceDirectory'];    
+    $this->sourceDirectory = $ini_array['project']['sourceDirectory'];
+    $this->codeLanguage = $ini_array['project']['codeLanguage'];
   }
   
   public function run() {
@@ -79,10 +81,18 @@ class SonarReviewCreator {
     $violationLineNumber = $violation->line;
     $violatedResource = $violation->resource;
     $violatedFile = $violatedResource->key;
-    $violatedFullFilePath = array_pop(explode(':', $violatedFile));
+    $violatedFullFilePath = $this->computeViolationFullFilePath($this->codeLanguage, $violatedFile);
     
     return new SonarViolation($this->sonarQubeClient, $violationId, $violationLineNumber, $violatedFullFilePath);
   }  
+
+  public function computeViolationFullFilePath($codeLanguage, $violatedFile) {
+    $fullFilePath = array_pop(explode(':', $violatedFile));
+    if ($codeLanguage == 'java') {
+      $fullFilePath = 'webservice/src/main/java/' . str_replace('.', '/', $fullFilePath) . '.java';
+    }
+    return $fullFilePath;
+  }
 
   public function getSonarHost() {
     return $this->sonarHost;
@@ -110,6 +120,10 @@ class SonarReviewCreator {
   
   public function getSourceDirectory() {
     return $this->sourceDirectory;
+  }
+
+  public function getCodeLanguage() {
+    return $this->codeLanguage;
   }
 
 }
