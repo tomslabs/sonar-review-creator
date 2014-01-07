@@ -23,17 +23,24 @@ class SonarReviewCreatorTest extends PHPUnit_Framework_TestCase {
     
     assertThat($this->sonarReviewCreator->getProjectName(), equalTo('com.tomslabs.tools:sonar-review-creator'));
     assertThat($this->sonarReviewCreator->getPriorities(), equalTo('BLOCKER,CRITICAL,MAJOR'));
-    assertThat($this->sonarReviewCreator->getDateCreatedAfter(), equalTo('2013-10-24'));
+    assertThat($this->sonarReviewCreator->getNbDaysBackward(), equalTo(1));
     assertThat($this->sonarReviewCreator->getSourceDirectory(), equalTo('/home/tomslabs/workspace/sonar-review-creator'));
   }  
   
   /** @test */
+  public function computeCreateAfterLimitDateFromNbDaysConf() {
+    $createAfterLimitDate = $this->sonarReviewCreator->computeCreateAfterLimitDateFromNbDaysConf(4, new DateTime('2013-10-24', new DateTimeZone('UTC')));
+    assertThat($createAfterLimitDate->format('Y-m-d'), equalTo("2013-10-20"));
+  }
+  
+  /** @test */
   public function retrieveViolationsCreatedAfterTheGivenDate() {
     $violations = json_decode($this->projectViolationsJson);
+    $createdAfterLimitDate = new DateTime('2013-10-24', new DateTimeZone('UTC'));
     
     $violationsCreatedAfter = array();
     foreach ($violations as $violation) {
-      if ($this->sonarReviewCreator->violationWasCreatedAfterTheGivenDate($violation->createdAt)) {
+      if ($this->sonarReviewCreator->violationWasCreatedAfterTheGivenDate($createdAfterLimitDate, $violation->createdAt)) {
         array_push($violationsCreatedAfter, $violation);
       }
     }

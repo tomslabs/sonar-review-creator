@@ -8,7 +8,7 @@ class SonarReviewCreator {
   private $project;
   private $sourceDirectory;
   private $priorities;
-  private $createdAfter;
+  private $nbDaysBackward;
   private $depth = -1;
   
   private $sonarQubeClient;
@@ -32,7 +32,7 @@ class SonarReviewCreator {
     
     $this->project = $ini_array['project']['name'];
     $this->priorities = $ini_array['project']['priorities'];
-    $this->createdAfter = $ini_array['project']['violationsCreatedAfter'];
+    $this->nbDaysBackward = $ini_array['project']['nbDaysBackward'];
     $this->sourceDirectory = $ini_array['project']['sourceDirectory'];    
   }
   
@@ -41,8 +41,9 @@ class SonarReviewCreator {
     $nbOfReviewsCreated = 0;
     
     $violations = $this->sonarQubeClient->getViolations($this->project, $this->depth, $this->priorities);
+    $createdAfterLimitDate = $this->computeCreateAfterLimitDateFromNbDaysConf($this->nbDaysBackward, new DateTime());
     foreach ($violations as $violation) {
-      if($this->violationWasCreatedAfterTheGivenDate($violation->createdAt)) {
+      if($this->violationWasCreatedAfterTheGivenDate($createdAfterLimitDate, $violation->createdAt)) {
         $sonarViolation = $this->newViolation($violation);
         $sonarViolation->computeAssignee($this->sourceDirectory);
         $nbOfReviewsCreated = $nbOfReviewsCreated + $sonarViolation->createReview();
@@ -52,10 +53,17 @@ class SonarReviewCreator {
     echo $nbOfReviewsCreated . " reviews were created during this run !";
   }
   
-  public function violationWasCreatedAfterTheGivenDate($createdAt) {
-    date_default_timezone_set('UTC');
-    $violationCreatedDate = new DateTime($createdAt);
-    $createdAfterLimitDate = new DateTime($this->createdAfter);
+  public function computeCreateAfterLimitDateFromNbDaysConf($nbDaysBackward, $createdAfterLimitDate) {
+    $createdAfterLimitDate->setTimezone(new DateTimeZone('UTC'));
+    
+    $nbDaysBackwardDateInterval = new DateInterval( "P".$nbDaysBackward."D" );
+    $nbDaysBackwardDateInterval->invert = 1; //Make it negative. 
+    
+    return $createdAfterLimitDate->add($nbDaysBackwardDateInterval);
+  }
+  
+  public function violationWasCreatedAfterTheGivenDate($createdAfterLimitDate, $createdAt) {
+    $violationCreatedDate = new DateTime($createdAt, new DateTimeZone('UTC'));
     return $violationCreatedDate >= $createdAfterLimitDate;
   }
   
@@ -89,8 +97,8 @@ class SonarReviewCreator {
     return $this->priorities;
   }
   
-  public function getDateCreatedAfter() {
-    return $this->createdAfter;
+  public function getNbDaysBackward() {
+    return $this->nbDaysBackward;
   }
   
   public function getSourceDirectory() {
