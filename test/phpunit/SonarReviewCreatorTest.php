@@ -6,7 +6,7 @@ class SonarReviewCreatorTest extends PHPUnit_Framework_TestCase {
   private $projectViolationsJson;
   
   public function setUp() {
-    $this->sonarReviewCreator = new SonarReviewCreator();
+    $this->sonarReviewCreator = new SonarReviewCreator(dirname(__FILE__).'/_fixtures/sonar-review-creator.ini');
     $this->projectViolationsJson = $this->readJsonResultFromFile('_fixtures/projectViolationsJson.json');
   }
   

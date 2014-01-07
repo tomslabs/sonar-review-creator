@@ -6,12 +6,10 @@ class SonarQubeClient {
   private $assignerUsername;
   private $assignerPassword;
   
-  public function __construct() {
-    $ini_array = parse_ini_file("sonar-review-creator.ini", true);
-    
-    $this->sonarHost = $ini_array['sonar']['host'];
-    $this->assignerUsername = $ini_array['assigner']['username'];
-    $this->assignerPassword = $ini_array['assigner']['password'];
+  public function __construct($sonarHost, $assignerUsername, $assignerPassword) {
+    $this->sonarHost = $sonarHost;
+    $this->assignerUsername = $assignerUsername;
+    $this->assignerPassword = $assignerPassword;
   }
   
   public function getViolations($project, $depth, $priorities) {
@@ -77,18 +75,6 @@ class SonarQubeClient {
 
     //close connection
     curl_close($ch);    
-  }
-  
-  public function getSonarHost() {
-    return $this->sonarHost;
-  }
-  
-  public function getAssignerUsername() {
-    return $this->assignerUsername;
-  }
-  
-  public function getAssignerPassword() {
-    return $this->assignerPassword;
   }
   
 }

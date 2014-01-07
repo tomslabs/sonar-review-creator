@@ -1,2 +1,2 @@
-<phpunit bootstrap="_framework/bootstrap.php">
+<phpunit bootstrap="_framework/bootstrap.php" backupGlobals="false">
 </phpunit>

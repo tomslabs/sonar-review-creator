@@ -9,7 +9,7 @@ class SonarViolationTest extends PHPUnit_Framework_TestCase {
   private $sonarQubeClient;
   
   public function setUp() {
-    $this->sonarQubeClient = $this->getMock('SonarQubeClient', array('executeCreateReview'));
+    $this->sonarQubeClient = $this->getMock('SonarQubeClient', array('executeCreateReview'), array(), '', false);
     $this->sonarViolation = new SonarViolation($this->sonarQubeClient, $this->violationId, $this->violationLineNumber, $this->violatedFullFilePath);
   }
   

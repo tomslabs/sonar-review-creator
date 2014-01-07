@@ -2,6 +2,10 @@
 
 class SonarQubeClientTest extends PHPUnit_Framework_TestCase {
 
+  private $sonarHost = 'sonar.mycompany.com';
+  private $assignerUsername = 'sonaradmin';
+  private $assignerPassword = 'password';
+  
   private $sonarQubeClient;
   private $project = 'com.tomslabs.tools:sonar-review-creator';
   private $priorities = 'BLOCKER,CRITICAL,MAJOR';
@@ -10,7 +14,7 @@ class SonarQubeClientTest extends PHPUnit_Framework_TestCase {
   private $projectViolationsJson;
   
   public function setUp() {
-    $this->sonarQubeClient = new SonarQubeClient();
+    $this->sonarQubeClient = new SonarQubeClient($this->sonarHost, $this->assignerUsername, $this->assignerPassword);
     $this->projectViolationsJson = $this->readJsonResultFromFile('_fixtures/projectViolationsJson.json');
   }
   
@@ -18,13 +22,6 @@ class SonarQubeClientTest extends PHPUnit_Framework_TestCase {
     $file = dirname(__FILE__).'/'.$fileName;
     return file_get_contents($file);  
   }    
-  
-  /** @test */
-  public function getConfFromIniFile() {
-    assertThat($this->sonarQubeClient->getSonarHost(), equalTo('sonar.mycompany.com'));
-    assertThat($this->sonarQubeClient->getAssignerUsername(), equalTo('sonaradmin'));
-    assertThat($this->sonarQubeClient->getAssignerPassword(), equalTo('password'));
-  }
   
   /** @test */
   public function buildGetViolationsUrl() {

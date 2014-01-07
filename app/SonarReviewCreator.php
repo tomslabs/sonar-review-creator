@@ -2,6 +2,8 @@
 
 class SonarReviewCreator {
   
+  const INIFILE_DEFAULT_FULL_PATH = 'app/config/sonar-review-creator.ini';
+  
   private $sonarHost;
   private $project;
   private $sourceDirectory;
@@ -11,9 +13,13 @@ class SonarReviewCreator {
   
   private $sonarQubeClient;
   
-  public function __construct() {
-    $ini_array = parse_ini_file("sonar-review-creator.ini", true);
-    
+  public function __construct($iniFileFullPath = self::INIFILE_DEFAULT_FULL_PATH) {
+    $this->extractConfsFromIniFile($iniFileFullPath);
+    $this->sonarQubeClient = new SonarQubeClient($this->sonarHost, $this->assignerUsername, $this->assignerPassword);
+  }
+  
+  private function extractConfsFromIniFile($iniFileFullPath) {
+    $ini_array = parse_ini_file($iniFileFullPath, true);
     $this->sonarHost = $ini_array['sonar']['host'];
     $this->assignerUsername = $ini_array['assigner']['username'];
     $this->assignerPassword = $ini_array['assigner']['password'];    
@@ -22,10 +28,8 @@ class SonarReviewCreator {
     $this->priorities = $ini_array['project']['priorities'];
     $this->createdAfter = $ini_array['project']['violationsCreatedAfter'];
     $this->sourceDirectory = $ini_array['project']['sourceDirectory'];    
-    
-    $this->sonarQubeClient = new SonarQubeClient($this->sonarHost, $this->assignerUsername, $this->assignerPassword);
   }
-
+  
   public function run() {
     echo "Running SonarReviewCreator for project " . $this->project . "..";
     $nbOfReviewsCreated = 0;
