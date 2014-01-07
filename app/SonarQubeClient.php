@@ -72,6 +72,7 @@ class SonarQubeClient {
 
     //execute post
     $result = curl_exec($ch);
+    var_dump($result);
 
     //close connection
     curl_close($ch);    
