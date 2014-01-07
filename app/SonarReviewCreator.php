@@ -38,14 +38,17 @@ class SonarReviewCreator {
   
   public function run() {
     echo "Running SonarReviewCreator for project " . $this->project . "..";
-    $nbOfReviewsCreated = 0;
-    
+
     $violations = $this->sonarQubeClient->getViolations($this->project, $this->depth, $this->priorities);
-    $createdAfterLimitDate = $this->computeCreateAfterLimitDateFromNbDaysConf($this->nbDaysBackward, new DateTime());
     if (count($violations) == 0) {
       echo "\n0 violations were found, no reviews will be created.\n";
       exit(1);
     }
+
+    date_default_timezone_set('UTC');
+    $createdAfterLimitDate = $this->computeCreateAfterLimitDateFromNbDaysConf($this->nbDaysBackward, new DateTime());
+    $nbOfReviewsCreated = 0;
+
     foreach ($violations as $violation) {
       if($this->violationWasCreatedAfterTheGivenDate($createdAfterLimitDate, $violation->createdAt)) {
         $sonarViolation = $this->newViolation($violation);
