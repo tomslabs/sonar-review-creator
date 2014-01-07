@@ -19,7 +19,13 @@ class SonarReviewCreator {
   }
   
   private function extractConfsFromIniFile($iniFileFullPath) {
-    $ini_array = parse_ini_file($iniFileFullPath, true);
+    try {
+      $ini_array = parse_ini_file($iniFileFullPath, true);
+    } catch (Exception $exc) {
+      echo 'File ' . $iniFileFullPath . ' could not be found or parsed. Make sure it is correctly written and suffix -template was removed.';
+      echo $exc->getTraceAsString();
+    }
+
     $this->sonarHost = $ini_array['sonar']['host'];
     $this->assignerUsername = $ini_array['assigner']['username'];
     $this->assignerPassword = $ini_array['assigner']['password'];    
