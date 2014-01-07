@@ -39,7 +39,7 @@ class SonarReviewCreator {
   }
   
   public function run() {
-    echo "Running SonarReviewCreator for project " . $this->project . "..";
+    echo "\nRunning SonarReviewCreator for project " . $this->project . "..\n";
 
     $violations = $this->sonarQubeClient->getViolations($this->project, $this->depth, $this->priorities);
     if (count($violations) == 0) {
@@ -59,7 +59,7 @@ class SonarReviewCreator {
       }
     }
     
-    echo $nbOfReviewsCreated . " reviews were created during this run !";
+    echo "\n".$nbOfReviewsCreated . " reviews were created during this run !\n";
   }
   
   public function computeCreateAfterLimitDateFromNbDaysConf($nbDaysBackward, $createdAfterLimitDate) {
@@ -82,7 +82,7 @@ class SonarReviewCreator {
     $violatedResource = $violation->resource;
     $violatedFile = $violatedResource->key;
     $violatedFullFilePath = $this->computeViolationFullFilePath($this->codeLanguage, $violatedFile);
-    
+
     return new SonarViolation($this->sonarQubeClient, $violationId, $violationLineNumber, $violatedFullFilePath);
   }  
 

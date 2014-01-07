@@ -16,7 +16,7 @@ class LdapUserAliasesMatcher {
         }
       }
       
-      echo "Could not match user with any LDAP user : " . $blamedDeveloper;
+      echo "\nCould not match user with any LDAP user : " . $blamedDeveloper . "\n";
       return self::DEFAULT_JOHN_DOE_USER;
     }
     
@@ -25,7 +25,7 @@ class LdapUserAliasesMatcher {
     if (file_exists($file)) {
       return file_get_contents($file);  
     } else {
-      echo "File ldap-aliases.json not found !";
+      echo "\nFile ldap-aliases.json not found !\n";
     }
   }
   

@@ -33,7 +33,7 @@ class SonarViolation {
     preg_match('/([0-9a-z]+ \()(.*)( 201[0-9]-)/', $gitBlameOutput, $match);
     $rawAssignee = "";
     if(count($match) < 2) {
-      echo "Assignee cannot be found on line " . $this->lineNumber . " of file " . $this->fullFilePath;
+      echo "\nAssignee cannot be found on line " . $this->lineNumber . " of file " . $this->fullFilePath . "\n";
     } else {
       $rawAssignee = $match[2];
     }
@@ -41,13 +41,13 @@ class SonarViolation {
   }
   
   public function createReview() {
-    echo "Creating review for violation (id, lineNumber, assigner, fullFilePath) : (".$this->violationId.", ".$this->lineNumber.", "
-            .$this->assignee.", ".$this->fullFilePath;
+    echo "\nCreating review for violation (id, lineNumber, assigner, fullFilePath) : (".$this->violationId.", ".$this->lineNumber.", "
+            .$this->assignee.", ".$this->fullFilePath . "\n";
     if ($this->assignee != null && $this->assignee != LdapUserAliasesMatcher::DEFAULT_JOHN_DOE_USER) {
       $this->sonarQubeClient->executeCreateReview($this->violationId, $this->assignee);
       return 1;
     } else {
-      echo "Could not create Review for violation " . $this->violationId . " and assignee " . $this->assignee;
+      echo "\nCould not create Review for violation " . $this->violationId . " and assignee " . $this->assignee . "\n";
       return 0;
     }
   }
