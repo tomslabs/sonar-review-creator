@@ -37,7 +37,7 @@ class SonarQubeClient {
     }
     catch(Exception $e)
     {
-      $this->log($e);
+      echo $e->getMessage();
     }
     curl_close($ch);
     return $output;
