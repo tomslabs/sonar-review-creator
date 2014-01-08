@@ -24,7 +24,11 @@ class SonarViolation {
   }
   
   public function executeGitBlameCommand($sourceDirectory) {
-    chdir($sourceDirectory);
+    echo "\ncd $sourceDirectory\n";
+    $chdir = chdir($sourceDirectory);
+    if (!$chdir) {
+      echo "\nFailed to run command : cd $sourceDirectory \n";
+    }
     return exec("git blame -L".$this->lineNumber.",".$this->lineNumber." ". $this->fullFilePath);
   }
   
