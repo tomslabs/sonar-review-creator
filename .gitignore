@@ -3,5 +3,5 @@
 composer.lock
 lib/vendor/composer
 tools/composer/bin/
-app/config/ldap-aliases-template.json
-app/config/sonar-review-creator-template.ini
+app/config/ldap-aliases.json
+app/config/sonar-review-creator.ini
