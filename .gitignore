@@ -5,3 +5,4 @@ lib/vendor/composer
 tools/composer/bin/
 app/config/ldap-aliases.json
 app/config/sonar-review-creator.ini
+.idea/
