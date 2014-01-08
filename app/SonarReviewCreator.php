@@ -39,27 +39,30 @@ class SonarReviewCreator {
   }
   
   public function run() {
-    echo "\nRunning SonarReviewCreator for project " . $this->project . "..\n";
+    echo "\nRunning SonarReviewCreator for project " . $this->project . ". Scanning $this->nbDaysBackward days back..\n";
 
     $violations = $this->sonarQubeClient->getViolations($this->project, $this->depth, $this->priorities);
-    if (count($violations) == 0) {
-      echo "\n0 violations were found, no reviews will be created.\n";
+    $nbViolations = count($violations);
+    echo "\n\nFound $nbViolations eligible violations for review creation..\n";
+    if ($nbViolations == 0) {
       exit(1);
     }
 
     date_default_timezone_set('UTC');
     $createdAfterLimitDate = $this->computeCreateAfterLimitDateFromNbDaysConf($this->nbDaysBackward, new DateTime());
     $nbOfReviewsCreated = 0;
+    $nbViolationsCreatedAfterLimitDate = 0;
 
     foreach ($violations as $violation) {
       if($this->violationWasCreatedAfterTheGivenDate($createdAfterLimitDate, $violation->createdAt)) {
+        $nbViolationsCreatedAfterLimitDate = $nbViolationsCreatedAfterLimitDate + 1;
         $sonarViolation = $this->newViolation($violation);
         $sonarViolation->computeAssignee($this->sourceDirectory);
         $nbOfReviewsCreated = $nbOfReviewsCreated + $sonarViolation->createReview();
       }
     }
-    
-    echo "\n".$nbOfReviewsCreated . " reviews were created during this run !\n";
+    echo "$nbViolationsCreatedAfterLimitDate violations were created since " . $createdAfterLimitDate->format('Y-m-d');
+    echo "\n$nbOfReviewsCreated reviews were created during this run !\n";
   }
   
   public function computeCreateAfterLimitDateFromNbDaysConf($nbDaysBackward, $createdAfterLimitDate) {
