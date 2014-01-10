@@ -31,7 +31,9 @@ class SonarViolation {
     $this->changeToDirectory($sourceDirectory);
     $pattern = $this->language == 'php' ? array_pop(explode(':', $this->fileFullKey)) : $this->fileName . $this->language;
     $findResults = $this->find('.', $pattern);
-    $this->fileNameFullPath = $findResults[0];
+    $firstResult = $findResults[0];
+    echo "\nFound file $firstResult";
+    $this->fileNameFullPath = $firstResult;
   }
   
   /**
