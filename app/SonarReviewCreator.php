@@ -57,6 +57,7 @@ class SonarReviewCreator {
       if($this->violationWasCreatedAfterTheGivenDate($createdAfterLimitDate, $violation->createdAt)) {
         $nbViolationsCreatedAfterLimitDate = $nbViolationsCreatedAfterLimitDate + 1;
         $sonarViolation = $this->newViolation($violation);
+        $sonarViolation->computeFileNameFullPath($this->sourceDirectory);
         $sonarViolation->computeAssignee($this->sourceDirectory);
         $nbOfReviewsCreated = $nbOfReviewsCreated + $sonarViolation->createReview();
       }
@@ -80,22 +81,8 @@ class SonarReviewCreator {
   }
   
   private function newViolation($violation) {
-    $violationId = $violation->id;
-    $violationLineNumber = $violation->line;
-    $violatedResource = $violation->resource;
-    $violatedFile = $violatedResource->key;
-    $violatedFullFilePath = $this->computeViolationFullFilePath($this->codeLanguage, $violatedFile);
-
-    return new SonarViolation($this->sonarQubeClient, $violationId, $violationLineNumber, $violatedFullFilePath);
+    return new SonarViolation($this->sonarQubeClient, $violation);
   }  
-
-  public function computeViolationFullFilePath($codeLanguage, $violatedFile) {
-    $fullFilePath = array_pop(explode(':', $violatedFile));
-    if ($codeLanguage == 'java') {
-      $fullFilePath = 'webservice/src/main/java/' . str_replace('.', '/', $fullFilePath) . '.java';
-    }
-    return $fullFilePath;
-  }
 
   public function getSonarHost() {
     return $this->sonarHost;

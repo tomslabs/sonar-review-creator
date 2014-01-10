@@ -29,18 +29,6 @@ class SonarReviewCreatorTest extends PHPUnit_Framework_TestCase {
   }  
 
   /** @test */
-  public function givenPhpProjectThenComputeViolationFullFilePath() {
-    $violationFile = "com.tomslabs.tools:sonar-review-creator:lib/helper/TomsLabsPager.class.php";
-    assertThat($this->sonarReviewCreator->computeViolationFullFilePath('php', $violationFile), equalTo('lib/helper/TomsLabsPager.class.php'));
-  }
-
-  /** @test */
-  public function givenJavaProjectThenComputeViolationFullFilePath() {
-    $violationFile = "com.tomslabs.de:toms-webservice:com.tomslabs.de.toms.TomsController";
-    assertThat($this->sonarReviewCreator->computeViolationFullFilePath('java', $violationFile), equalTo('webservice/src/main/java/com/tomslabs/de/toms/TomsController.java'));
-  }
-
-  /** @test */
   public function computeCreateAfterLimitDateFromNbDaysConf() {
     $createAfterLimitDate = $this->sonarReviewCreator->computeCreateAfterLimitDateFromNbDaysConf(4, new DateTime('2013-10-24', new DateTimeZone('UTC')));
     assertThat($createAfterLimitDate->format('Y-m-d'), equalTo("2013-10-20"));
