@@ -46,9 +46,34 @@ class SonarViolationTest extends PHPUnit_Framework_TestCase {
         'resource' => $violationResource);    
     return $violation;
   }
-  
+
+  private function newJavaStdClassViolation() {
+      $violationRule = (object) array(
+          'key' => "pmd:UnusedLocalVariable",
+          'name' => "Unused local variable"
+      );
+
+      $violationResource = (object) array(
+          'key' => "com.bom.fe:tagPages-webservice:com.bom.fe.tagpages.TagPagesController",
+          'name' => 'TagPagesController',
+          'scope' => 'FIL',
+          'qualifier' => 'CLA',
+          'language' => 'java'
+      );
+
+      $violation = (object) array(
+          'id' => 22970858,
+          'message' => "Avoid unused local variables such as 'fakeVarToTriggerViolation'.",
+          'line' => 61,
+          'priority' => 'MAJOR',
+          'createdAt' => '2014-01-15T11:07:27+0100',
+          'rule' => $violationRule,
+          'resource' => $violationResource);
+      return $violation;
+  }
+
   /** @test */
-  public function findPathToViolatedFile() {
+  public function findPathToPhpViolatedFile() {
     $sourceDirectory = "/home/tomslabs/workspace/sonar-review-creator/app";
     $sonarViolation = $this->getMock('SonarViolation', array('find', 'changeToDirectory'), array(), '', false);
     $sonarViolation->expects($this->once())
@@ -56,9 +81,20 @@ class SonarViolationTest extends PHPUnit_Framework_TestCase {
                    ->will($this->returnValue(array('./modules/thirdParty/actions/components.class.php')));     
     $sonarViolation->computeFileNameFullPath($sourceDirectory);
     assertThat($sonarViolation->getFileNameFullPath(), equalTo('./modules/thirdParty/actions/components.class.php'));
-  }   
-  
+  }
+
   /** @test */
+  public function findPathToJavaViolatedFile() {
+    $sourceDirectory = "/home/tomslabs/worspace/javaApp";
+    $sonarViolation = $this->getMock('SonarViolation', array('find', 'changeToDirectory'), array(), '', false);
+    $sonarViolation->expects($this->once())
+        ->method('find')
+        ->will($this->returnValue(array('./webservice/src/main/java/com/bom/tomslabs/javaApp/appController.java')));
+    $sonarViolation->computeFileNameFullPath($sourceDirectory);
+    assertThat($sonarViolation->getFileNameFullPath(), equalTo('./webservice/src/main/java/com/bom/tomslabs/javaApp/appController.java'));
+  }
+
+    /** @test */
   public function getAnnotationFromViolatedFileAndLineNumber() {
     $sourceDirectory = "/home/tomslabs/workspace/sonar-review-creator/app";
     $sonarViolation = $this->mockSonarViolationToExecGitBlameAndStubLdapMatcher();

@@ -29,7 +29,7 @@ class SonarViolation {
   
   public function computeFileNameFullPath($sourceDirectory) {
     $this->changeToDirectory($sourceDirectory);
-    $pattern = $this->language == 'php' ? array_pop(explode(':', $this->fileFullKey)) : $this->fileName . $this->language;
+    $pattern = $this->language == 'php' ? array_pop(explode(':', $this->fileFullKey)) : $this->fileName .'.'. $this->language;
     $findResults = $this->find('.', $pattern);
     $firstResult = $findResults[0];
     echo "\nFound file $firstResult";
