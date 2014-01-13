@@ -9,7 +9,7 @@ class SonarReviewCreator {
   private $sourceDirectory;
   private $priorities;
   private $nbDaysBackward;
-  private $codeLanguage;
+  private $vcs;
   private $depth = -1;
   
   private $sonarQubeClient;
@@ -35,7 +35,7 @@ class SonarReviewCreator {
     $this->priorities = $ini_array['project']['priorities'];
     $this->nbDaysBackward = $ini_array['project']['nbDaysBackward'];
     $this->sourceDirectory = $ini_array['project']['sourceDirectory'];
-    $this->codeLanguage = $ini_array['project']['codeLanguage'];
+    $this->vcs = $ini_array['project']['vcs'];
   }
   
   public function run() {
@@ -58,7 +58,7 @@ class SonarReviewCreator {
         $nbViolationsCreatedAfterLimitDate = $nbViolationsCreatedAfterLimitDate + 1;
         $sonarViolation = $this->newViolation($violation);
         $sonarViolation->computeFileNameFullPath($this->sourceDirectory);
-        $sonarViolation->computeAssignee($this->sourceDirectory);
+        $sonarViolation->computeAssignee($this->sourceDirectory, $this->vcs);
         $nbOfReviewsCreated = $nbOfReviewsCreated + $sonarViolation->createReview();
       }
     }
@@ -112,8 +112,8 @@ class SonarReviewCreator {
     return $this->sourceDirectory;
   }
 
-  public function getCodeLanguage() {
-    return $this->codeLanguage;
+  public function getVcs() {
+    return $this->vcs;
   }
 
 }

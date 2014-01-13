@@ -25,7 +25,7 @@ class SonarReviewCreatorTest extends PHPUnit_Framework_TestCase {
     assertThat($this->sonarReviewCreator->getPriorities(), equalTo('BLOCKER,CRITICAL,MAJOR'));
     assertThat($this->sonarReviewCreator->getNbDaysBackward(), equalTo(1));
     assertThat($this->sonarReviewCreator->getSourceDirectory(), equalTo('/home/tomslabs/workspace/sonar-review-creator'));
-    assertThat($this->sonarReviewCreator->getCodeLanguage(), equalTo('php'));
+    assertThat($this->sonarReviewCreator->getVcs(), equalTo('git'));
   }  
 
   /** @test */
