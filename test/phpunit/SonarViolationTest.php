@@ -98,7 +98,7 @@ class SonarViolationTest extends PHPUnit_Framework_TestCase {
   public function getAnnotationFromViolatedFileAndLineNumber() {
     $sourceDirectory = "/home/tomslabs/workspace/sonar-review-creator/app";
     $sonarViolation = $this->mockSonarViolationToExecGitBlameAndStubLdapMatcher();
-    $sonarViolation->computeAssignee($sourceDirectory);
+    $sonarViolation->computeAssignee($sourceDirectory, 'git');
     assertThat($sonarViolation->getAssignee(), equalTo('smartin'));
   }
   
@@ -123,6 +123,13 @@ class SonarViolationTest extends PHPUnit_Framework_TestCase {
     
     $assignee = $this->sonarViolation->extractDeveloperFromGitBlameOutput($blameOutput);
     assertThat($assignee, equalTo("Sébastien M"));
+  }
+
+  /** @test */
+  public function getDeveloperFromSvnBlameOutput() {
+    $blameOutput = "29--  4055    smartin         long nextLong = abs(random.nextLong());";
+    $assignee = $this->sonarViolation->extractDeveloperFromSvnBlameOutput($blameOutput);
+    assertThat($assignee, equalTo("smartin"));
   }
   
   /** @test */

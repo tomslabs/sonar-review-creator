@@ -61,9 +61,14 @@ class SonarViolation {
       return $files;
   }    
   
-  public function computeAssignee($sourceDirectory) {
-    $outputGitBlame = $this->executeGitBlameCommand($sourceDirectory);
-    $rawAssignee = $this->extractDeveloperFromGitBlameOutput($outputGitBlame);
+  public function computeAssignee($sourceDirectory, $vcs) {
+    if ($vcs == 'svn') {
+        $outputSvnBlame = $this->executeSvnBlameCommand($sourceDirectory);
+        $rawAssignee = $this->extractDeveloperFromSvnBlameOutput($outputSvnBlame);
+    } else {
+        $outputGitBlame = $this->executeGitBlameCommand($sourceDirectory);
+        $rawAssignee = $this->extractDeveloperFromGitBlameOutput($outputGitBlame);
+    }
     $this->assignee=$this->ldapUserAliasesMatcher->getLdapUserFromPickedNickName($rawAssignee);
   }
   
@@ -71,7 +76,12 @@ class SonarViolation {
     $this->changeToDirectory($sourceDirectory);
     return exec("git blame -L".$this->lineNumber.",".$this->lineNumber." ". $this->fileNameFullPath);
   }
-  
+
+  public function executeSvnBlameCommand($sourceDirectory) {
+    $this->changeToDirectory($sourceDirectory);
+    return exec("svn blame $this->fileNameFullPath | awk '{print FNR \"--\" $0}' | grep '$this->lineNumber--' ");
+  }
+
   public function changeToDirectory($sourceDirectory) {
     echo "\ncd $sourceDirectory\n";
     $chdir = chdir($sourceDirectory);
@@ -82,6 +92,7 @@ class SonarViolation {
   
   public function extractDeveloperFromGitBlameOutput($gitBlameOutput) {
     $match = array();
+      //4463b322 (Sébastien M 2013-10-23 10:49:10 +0200 249)   private static function getMarkupWhenLayer(
     preg_match('/([0-9a-z]+ \()(.*)( 201[0-9]-)/', $gitBlameOutput, $match);
     $rawAssignee = "";
     if(count($match) < 2) {
@@ -91,7 +102,20 @@ class SonarViolation {
     }
     return $rawAssignee;
   }
-  
+
+  public function extractDeveloperFromSvnBlameOutput($svnBlameOutput) {
+    $match = array();
+      //"29--  4055    smartin         long nextLong = abs(random.nextLong());"
+    preg_match('/([0-9]+--\s+)([0-9]+\s+)([a-z]+)(.*)/', $svnBlameOutput, $match);
+    $rawAssignee = "";
+    if(count($match) < 4) {
+      echo "\nAssignee cannot be found on line " . $this->lineNumber . " of file " . $this->fileNameFullPath . "\n";
+    } else {
+      $rawAssignee = $match[3];
+    }
+    return $rawAssignee;
+  }
+
   public function createReview() {
     echo "\nCreating review for violation (id, lineNumber, assigner, fileNameFullPath) : (".$this->id.", ".$this->lineNumber.", "
             .$this->assignee.", ".$this->fileNameFullPath . "\n";
