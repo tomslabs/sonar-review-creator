@@ -79,7 +79,7 @@ class SonarViolation {
 
   public function executeSvnBlameCommand($sourceDirectory) {
     $this->changeToDirectory($sourceDirectory);
-    return exec("svn blame $this->fileNameFullPath | awk '{print FNR \"--\" $0}' | grep '$this->lineNumber--' ");
+    return exec("svn blame $this->fileNameFullPath | awk '{print \"--\" FNR \"--\" $0}' | grep '\-\-$this->lineNumber--' ");
   }
 
   public function changeToDirectory($sourceDirectory) {

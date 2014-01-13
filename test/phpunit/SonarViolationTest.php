@@ -127,7 +127,7 @@ class SonarViolationTest extends PHPUnit_Framework_TestCase {
 
   /** @test */
   public function getDeveloperFromSvnBlameOutput() {
-    $blameOutput = "29--  4055    smartin         long nextLong = abs(random.nextLong());";
+    $blameOutput = "--29--  4055    smartin         long nextLong = abs(random.nextLong());";
     $assignee = $this->sonarViolation->extractDeveloperFromSvnBlameOutput($blameOutput);
     assertThat($assignee, equalTo("smartin"));
   }
