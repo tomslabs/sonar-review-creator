@@ -79,7 +79,7 @@ class SonarViolation {
 
   public function executeSvnBlameCommand($sourceDirectory) {
     $this->changeToDirectory($sourceDirectory);
-    return exec("svn blame $this->fileNameFullPath | awk '{print \"--\" FNR \"--\" $0}' | grep '\-\-$this->lineNumber--' ");
+    return exec("svn blame $this->fileNameFullPath | sed -n '".$this->lineNumber."p'");
   }
 
   public function changeToDirectory($sourceDirectory) {
@@ -105,13 +105,13 @@ class SonarViolation {
 
   public function extractDeveloperFromSvnBlameOutput($svnBlameOutput) {
     $match = array();
-      //"29--  4055    smartin         long nextLong = abs(random.nextLong());"
-    preg_match('/([0-9]+--\s+)([0-9]+\s+)([a-z]+)(.*)/', $svnBlameOutput, $match);
+      //" 26965    smartin     long nextLong = abs(random.nextLong());"
+    preg_match('/(\s+[0-9]+\s+)([a-z]+)(.*)/', $svnBlameOutput, $match);
     $rawAssignee = "";
-    if(count($match) < 4) {
+    if(count($match) < 2) {
       echo "\nAssignee cannot be found on line " . $this->lineNumber . " of file " . $this->fileNameFullPath . "\n";
     } else {
-      $rawAssignee = $match[3];
+      $rawAssignee = $match[2];
     }
     return $rawAssignee;
   }
