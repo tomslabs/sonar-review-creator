@@ -32,3 +32,9 @@ To run phpUnit tests, first install and configure composer.json
 2. `php composer.phar install`
 
 Then run `tools/composer/bin/phpunit -c test/phpunit/phpunit.xml test/phpunit/`
+
+Example of how you can use sonar-review-creator
+===============================================
+
+cf. wiki : https://github.com/tomslabs/sonar-review-creator/wiki/sonar-review-creator
+
