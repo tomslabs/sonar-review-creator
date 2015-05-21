@@ -39,7 +39,8 @@ class SonarQubeClientTest extends PHPUnit_Framework_TestCase {
     $violationResource = $firstViolation->resource;
     $violatedFile = $violationResource->key;
     
-    $violatedFullFilePath = array_pop(explode(':', $violatedFile));
+    $explodeViolatedFile = explode(':', $violatedFile);
+    $violatedFullFilePath = array_pop($explodeViolatedFile);
     
     assertThat(count($violations), equalTo(5));
     assertThat($violationLineNumber, equalTo(249));
